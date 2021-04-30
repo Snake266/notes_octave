@@ -1,0 +1,523 @@
+\documentclass[12pt, a4paper,oneside]{book}
+
+%шрифты
+\usepackage{fontspec}
+\setmainfont{Liberation Sans}
+
+% Язык
+\usepackage[russian]{babel}
+
+
+% немного математики
+\usepackage{amsmath}
+
+% геометрия
+\usepackage{geometry}
+\geometry {
+  a4paper,
+  top = 15mm,
+  left=25mm,
+  right=15mm,
+  bottom = 25mm
+}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue
+    %citecolor=black,
+    %filecolor=black,
+    %linkcolor=black,
+    %urlcolor=black
+}
+
+% Для кода
+\usepackage{listings}
+% цвета
+\usepackage{color}
+
+\definecolor{backcolor}{rgb}{1, 0.8, 0.7}
+
+%\usepackage[utf8x]{inputenc}
+
+\lstset {
+  backgroundcolor = \color{backcolor},
+  frame = single,
+  inputencoding=utf8,
+  extendedchars=\true,
+  keepspaces=true,
+  escapechar={|}
+}
+
+\usepackage{graphicx}
+\usepackage{float}
+% писанина связанная с текстом
+\renewcommand*\contentsname{Оглавление}
+
+\title{Octave конспект и заметки}
+
+\author{Батурин Георгий}
+\date{}
+
+\begin{document}
+\tableofcontents
+
+\chapter{Основы}
+\section{Форматы отображения}
+Для начала, стоит отметить, что по умолчанию включен формат short
+В Octave есть следующие форматы отображения чисел:
+\begin{itemize}
+  \item{short}
+        \begin{lstlisting}
+          octave:1> format short
+          octave:2> pi
+          ans = 3.1416
+        \end{lstlisting}
+
+  \item{long}
+        \begin{lstlisting}
+          octave:3> format long
+          octave:4> pi
+          ans = 3.141592653589793
+        \end{lstlisting}
+
+  \item{short e --- краткая запись в формате с плавающей точкой}
+        \begin{lstlisting}
+          octave:5> format short e
+          octave:6> pi
+          ans = 3.1416e+00
+        \end{lstlisting}
+
+  \item{long e --- длинная запись в формате с плавающей точкой}
+        \begin{lstlisting}
+          octave:7> format long e
+          octave:8> pi
+          ans = 3.141592653589793e+00
+        \end{lstlisting}
+
+  \item{short g --- вторая форма записи в формате с плавающей точкой}
+        \begin{lstlisting}
+          octave:10> format short g
+          octave:11> pi
+          ans = 3.1416
+        \end{lstlisting}
+
+  \item{long g --- вторая форма записи в формате с плавающей точкой}
+        \begin{lstlisting}
+          octave:12> format long g
+          octave:13> pi
+          ans = 3.141592653589793
+        \end{lstlisting}
+
+  \item{Hex --- запись в виде шестнадцетиричного числа}
+        \begin{lstlisting}
+          octave:14> format hex
+          octave:15> pi
+          ans = 400921fb54442d18
+        \end{lstlisting}
+
+  \item{native-hex --- запись в шестнадцетиричного числа, в таком виде, в каком оно хранится в памяти компьютера}
+        \begin{lstlisting}
+          octave:16> format native-hex
+          octave:17> pi
+          ans = 182d4454fb210940
+        \end{lstlisting}
+
+  \item{bit --- запись в виде двочиного числа}
+        \begin{lstlisting}
+          octave:18> format bit
+          octave:19> pi
+          ans = 01000000000010010010000111111011010101...
+        \end{lstlisting}
+
+  \item{native-bit --- запись в виде двочиного числа, в таком виде, в каком оно хранится в памяти компьютера}
+        \begin{lstlisting}
+          octave:21> format native-bit
+          octave:22> pi
+          ans = 00011000101101000010001000101010110...
+        \end{lstlisting}
+
+  \item{bank --- запись до сотых долей}
+        \begin{lstlisting}
+          octave:23> format bank
+          octave:24> pi
+          ans = 3.14
+        \end{lstlisting}
+
+  \item{plus --- записывается только знак числа}
+        \begin{lstlisting}
+          octave:25> format plus
+          octave:26> pi
+          ans = +
+        \end{lstlisting}
+
+  \item{free --- запись без форматирования, чаще всего этот формат применяют для представления комплексного числа}
+        \begin{lstlisting}
+          octave:27> format short
+          octave:28> 3.1234+2.9876*i
+          ans =  3.1234 + 2.9876i
+          octave:29> format free
+          octave:30> 3.1234+2.9876*i
+          ans = (3.1234,2.9876)
+        \end{lstlisting}
+
+  \item{compact --- запись в формате, не превышающем шесть позиций, включая десятичную точку, если целая часть числа превышает четыре знака, число будет записано в экспоненциальной форме.}
+        \begin{lstlisting}
+          format comact
+          octave:35> 123.123456
+          ans = 123.123
+          octave:36> 1234.12345
+          ans = 1234.12
+          octave:37> 12345.123
+          ans = 12345.1
+        \end{lstlisting}
+\end{itemize}
+\newpage
+
+\section{Элементарные функции}
+\subsection{Целочисленные функции}
+\begin{itemize}
+  \item{$fix(x)$ --- округление числа $x$ до ближайщего целого в сторону нуля}
+  \item{$floor(x)$ --- округление числа $x$ до ближайщего целогов сторону отрицательной бесконечности}
+  \item{$ceil(x)$ --- округление числа $x$ до ближайщего целого в сторону положительной бесконечности}
+  \item{$round(x)$ --- округление числа $x$ до ближайщего целого}
+  \item{$rem(x, y)$ --- вычисление остатка от деления $x$ на $y$}
+  \item{$sign(x)$ --- возвращает $0$, если $x=0$, $-1$ при $x < 0$ b $1$, если $x > 0$}
+\end{itemize}
+
+\subsection{Тригонометрические функции}
+\begin{itemize}
+  \item{$sin[d](x)$ --- синус числа $x$ в радианах}
+  \item{$cos[d](x)$ --- косинус числа $x$}
+  \item{$tan[d](x)$ --- тангенс числа}
+  \item{$cot[d](x)$ --- котангенс числа}
+  \item{$sec[d](x)$ --- секанс числа}
+  \item{$csc[d](x)$ --- косеканс числа}
+  \item{$asin[d](x)$ --- арксинус числа}
+  \item{$acos[d](x)$ --- арккосинус числа}
+  \item{$atan[d](x)$ --- арктангенс числа}
+  \item{$acot[d](x)$ --- арккотангенс числа}
+  \item{$asec[d](x)$ --- арксеканс числа}
+  \item{$acsc[d](x)$ ---арккосеканс числа}
+\end{itemize}
+
+\subsection{Экспоненциальные функции}
+\begin{itemize}
+  \item{$exp(x)$ --- экспонент числа $x$}
+  \item{$log(x)$ --- НАТУРАЛЬНЫЙ логарифм числа $x$}
+\end{itemize}
+
+\subsection{Гиперболические функции}
+\begin{itemize}
+  \item{$sinh(x)$ --- гиперболический синус $x$}
+  \item{$cosh(x)$ --- гиперболический косинус $x$}
+  \item{$tanh(x)$ --- гиперболический тангенс $x$}
+  \item{$coth(x)$ --- гиперболический котангенс $x$}
+  \item{$sech(x)$ --- гиперболический секанс $x$}
+  \item{$csch(x)$ --- гиперболический косеканс числа $x$}
+\end{itemize}
+
+\subsection{Другие полезные и простые элементарные функции}
+\begin{itemize}
+  \item{$sqrt(x)$ --- квадратный корень из числа $x$}
+  \item{$abs(x)$ --- модуль числа $x$}
+  \item{$log10(x)$ --- десятичный логарифм от числа $x$}
+  \item{$log2(x)$ --- логарифм по основанию два из числа $x$}
+  \item{$pow2(x)$ --- возведение двойки в степень $x$}
+  \item{$gcd(x, y)$ --- наибольший общий делитель чисел $x$ и $y$}
+  \item {$lcm(x, y)$ --- наименьшее общее кратное чисел $x$ и $y$}
+  \item{$rats(x)$ --- представление числа $x$ в виде рациональной дроби}
+\end{itemize}
+
+\subsection{Обработка строк}
+\begin{itemize}
+  \item{$char(code)$ --- возвращает символ по его коду (Например у буквы d код равен 100). Можно подставить промежуток кодов и получить буквы с кодами этого промежутка}
+  \item{$deblank(s)$ --- возвращает новую строку удаляя пробелы в конце старой строки}
+  \item{$int2str(x)$ --- возвращает строку из числа $x$ или, если $x$ -- массив, то строку составленную из чисел, хранящихся в $x$ (числа будут преобразованы к целому типы)}
+  \item{$findstr(str, substr)$ --- возвращает номер позиции, начиная с которой подстрока $substr$ входит в строку $str$}
+  \item{$lower(s)$ --- возвращает строку, где все буквы строки $s$ заменены на строчные}
+  \item{$upper(s)$ --- возвращает строку $s$, преобразованную к прописным буквам}
+  \item{$mat2str(x, n)$ --- преобразовывает числовую матрицу $x$ в строку; если присутствует необязательный параметр $n$, то перед преобразованием в строку все елементы округляются до n значащих цифр}
+  \item{$num2str(x, n)$ --- преобразовывает матрицу (массив) $x$ в массив символов, если присутствует необязательный параметр $n$, то перед преобразованием в строку все элементы матрицы округлятся до $n$ значащих цифр}
+  \item{$sprintf(format, x)$ --- формирует строку в соотвествии с заданным $format$, одно и то же что и сишный sprintf}
+  \item{$sscanf(s, format)$ --- возвращает из строки $s$ числовое значение в соотвествии с форматом. Тот же сишный sscanf}
+  \item{$str2double(s)$ --- формирует числа из строки $s$, если это возможно}
+  \item{$str2num(s)$ --- формирование массива числе из строки, если это возможно}
+  \item{$strcat(s1, s2, ..., sn)$ --- объединяет строки}
+  \item{$strcmp(s1, s2)$ --- возвращает 1, если строки одинковы, 0 -- в противном случае}
+  \item{$strcpmi(s1, s2)$ --- сравнение строк, не различая строчные и прописные буквы}
+  \item{$strjust(s, direction)$ --- выравенивание строки $s$ в соотвествии с напрвлением $direct$: $right$ -- по правому краю, $left$ -- по левому краю, $center$ -- по центру}
+  \item{$strncmp(s1, s2, n)$ --- сравнение первых $n$ символов строк. Возвращает 1, если первые $n$ сиволов строк совпадают, 0 -- в противном случае}
+  \item{$strrep(s, subs, subsnew)$ --- формирует новую строку из строки $s$ путем замены подстрок $subs$ на подстроки $subsnew$}
+  \item{$strtok(s, delimiter)$ --- поиск первой подстроки в строке $s$, отделенной пробелом или символом табуляции (при отсутствии параметра $delimiter$) или превой подстроки отделенной от $s$ одним из символов, входящих в $delimiter$. Функция может возвращать 2 параметра: первый -- найденная подстрока, второй -- содержит остаток строки $s$ после $strtok$}
+
+\end{itemize}
+
+\section{Комплексные числа. Функции комплексного аргумента}
+Форма записи:
+\begin{enumerate}
+  \item{$\text{действительная часть} + i * \text{мнимая часть}$}
+  \item{$\text{действительная часть} + j * \text{мнимая часть}$}
+\end{enumerate}
+Пример:
+\begin{lstlisting}
+  >> 3+i*5
+  ans =  3 + 5i
+  >> 7+2j
+  ans =  7 + 2i
+  >> 7+0j
+  ans = 7
+  >> 5+j3
+  error: 'j3' undefined near line 1, column 1
+\end{lstlisting}
+
+Также, можно применять элементарные арифметические операции $+, -, *, backslash, /, \^$:
+\begin{lstlisting}
+  >> a = -5+2i;
+  >> b = 3-5i;
+  >> a+b
+  ans = -2 - 3i
+  >> a-b
+  ans = -8 + 7i
+  >> a*b
+  ans =  -5 + 31i
+  >> a/b
+  ans = -0.7353 - 0.5588i
+  >> a^2+b^2
+  ans =   5 - 50i
+\end{lstlisting}
+\subsection{Функции для работы с комплексными числами}
+\begin{itemize}
+  \item{$real(z)$ --- возвращает действительную часть комплексного аргумента $z$}
+  \item{$imag(z)$ --- возвращает мнимую часть комплексного аргумента $z$}
+  \item{$angle(z)$ --- вычисляет значение аргумента комплексного числа $z$ в радианах от $-\pi$ до $\pi$}
+  \item{$conj(z)$ --- возвращает числа, комплексно сопряженное $z$}
+\end{itemize}
+Пример:
+\begin{lstlisting}
+  >> a=-3;b=4;z=a+i*b
+  z = -3 + 4i
+  >> real(z)
+  ans = -3
+  >> imag(z)
+  ans = 4
+  >> angle(z)
+  ans = 2.2143
+  >> conj(z)
+  ans = -3 - 4i
+\end{lstlisting}
+
+\section{Логические операторы}
+\begin{itemize}
+  \item{$<$ --- меньше}
+  \item{$>$ --- больше}
+  \item{$==$ --- равно}
+  \item{$~=$ --- не равно (также есть $!=$, но в Matlab оно не работает)}
+  \item{$<=$ --- меньше или равно}
+  \item{$>=$ --- больше или равно}
+\end{itemize}
+Логичесие операции и отношения:
+\begin{itemize}
+  \item{$and(a, b)$ или $a \& b$ --- логическое и}
+  \item{$or(a, b)$ или $a | b$ --- логическое или}
+  \item{$xor(a, b)$ --- исключающее или}
+  \item{$not(a)$ или $~a$ --- отрицание}
+\end{itemize}
+
+\section{Функции определенные пользователем}
+\subsection{Базовые формы записи функции}
+Функция, которая ничего не возвращает и не получает никаких аргументов
+\begin{lstlisting}
+  function <function-name>
+    <body>
+  end[function]
+\end{lstlisting}
+Квадратные скобки обозначают, что можно написать как и $endfunction$, так и просто $end$. Дальше, для краткости я буду писать просто $end$.
+Стоит отметить, что в Octave принимается как и $endfunction$ ($endfor$ и др.), так и end, но в Matlab синтаксически верно только $end$.\\
+
+Для того чтобы определить функцию, которая принимает некоторые аргументы, есть такая запись:
+\begin{lstlisting}
+  function <function-name>(<arg-list>)
+    <body>
+  end
+\end{lstlisting}
+
+Для того чтобы функция возвращала, некоторое значение существует такая форма:
+\begin{lstlisting}
+  function <ret-value> = <function-name>(<arg-list>)
+    <body>
+  end
+\end{lstlisting}
+
+\subsection{Продвинутые техники}
+\subsubsection{Функция, которая принимает переменное кол-во аргументов}
+Для того чтобы определить функцию, которая получает переменное кол-во аргументов, стоит использовать специальный параметр \textit{varargin}:
+\begin{lstlisting}
+  function <ret-value> = <function-name>(varargin)
+    <body>
+  end
+\end{lstlisting}
+Пример:
+\begin{lstlisting}
+  function print_arguments(varargin)
+    for i = 1 : length(varargin)
+        printf("Input argument %d: ", i);
+        disp(varargin{i});
+    end
+  end
+\end{lstlisting}
+Эта функция может такое:
+\begin{lstlisting}[backgroundcolor=\color{cyan}]
+print_arguments(1, [1, 2], "hi")
+Input argument 1: 1
+Input argument 2:    1   2
+Input argument 3: hi
+\end{lstlisting}
+
+\subsubsection{Функция, которая возвращает несколько значений}
+\begin{lstlisting}
+  function [<ret-list>] = <function-name> (<arg-list>)
+    body
+  end
+\end{lstlisting}
+В этом, примере квадратные скобки обозначают, массив возвращаемых значений, они обязательны! Пример:
+\begin{lstlisting}
+  function [max, idx] = vmax (v)
+    idx = 1;
+    max = v(idx);
+    for i = 2 :length(v)
+        if(v(i) > max)
+            max = v(i);
+            idx = i;
+        endif
+    endfor
+  endfunction
+\end{lstlisting}
+
+\subsubsection{Функции с переменным числом возвращаемых значений}
+Для того чтобы функция имела переменная кол-во возвращаемых значений, надо применить специальный параметр - \textit{varargout}
+\begin{lstlisting}
+  function varargout = <function-name>(<arg-list>)
+    <body>
+    end
+\end{lstlisting}
+Пример:
+\begin{lstlisting}
+  function varargout = one_to_n()
+    for i = 1 : nargout
+        varargout{i} = i;
+    endfor
+  endfunction
+\end{lstlisting}
+Используем:
+\begin{lstlisting}[backgroundcolor=\color{cyan}]
+  >> [a,b,c] = one_to_n()
+  a = 1
+  b = 2
+  c = 3
+  >> [a,b,c,d] = one_to_n()
+  a = 1
+  b = 2
+  c = 3
+  d = 4
+\end{lstlisting}
+\subsection{Общая форма записи функции}
+Если обобщить всё, то в общем объявление функции выглядит так:
+\begin{lstlisting}
+  function name1[, name2,...] = fun(var1[,var2,...])
+\end{lstlisting}
+
+\section{Массивы и матрицы}
+Самый простой способ создать массив это задание промежутка: $start : step : end$, где \textit{start} -- начало промежутка, \textit{step} -- шаг, \textit{end} -- конец промежутка.
+\begin{lstlisting}
+  >> A = 1 : 5
+  A =
+  1   2   3   4   5
+
+  >> A = 1 : 0.5 : 3
+  A =
+  1.0000    1.5000    2.0000    2.5000    3.0000
+\end{lstlisting}
+% TODO: может я когда-нибудь дополню это место
+
+\section{Символьные вычисления}
+Для начала нужно установить пакет symbolic для Octave, дальше загрузить его командой \textit{pkg load symbolic}. Для того чтобы создать символьную переменную надо их объявить, например \textit{x = sym('x')} или \textit{syms x}. Пример:
+\begin{lstlisting}
+  >> x = sym("x")
+  x = (sym) x
+  >> y = sin(x)^2 - cos(x)^2
+  y = (sym)
+
+  2         2
+  sin (x) - cos (x)
+
+  >> subs(y, x, pi)
+  ans = (sym) -1
+  >> y = x^2
+  y = (sym)
+
+  2
+  x
+
+  >> subs(y, 10)
+  ans = (sym) 100
+\end{lstlisting}
+Стоить заметить, что пакет symbolic после subs возвращает значения типа sym, это значит, что его в дальнейшим надо привести к численному типу, для этого можно использовать \hyperref[sec:sym/eval]{eval} или \hyperref[sec:sym/double]{double}
+\chapter{Полезные функции}
+
+\section{Символьные вычисления}
+
+\subsection{@sym/double} \label{sec:sym/double}
+Ссылка на страницу в документации: \url{https://octave.sourceforge.io/symbolic/function/@sym/double.html}\\
+Конвертирует символьное выражение в double
+\begin{lstlisting}[mathescape]
+  x = sym(1) / 3
+  $\Rightarrow$ x = (sym) 1/3
+  double (x)
+  $\Rightarrow$ ans =  0.3333
+\end{lstlisting}
+Не смотря на название, может конвертировать комплексное символьное выражение в число:
+\begin{lstlisting}[mathescape]
+  z = sym(4i) - 3;
+  double (z)
+  $\Rightarrow$ ans = -3 + 4i
+\end{lstlisting}
+
+\subsection{@sym/eval} \label{sec:sym/eval}
+Ссылка на страницу в  документации: \url{https://octave.sourceforge.io/symbolic/function/@sym/eval.html}\\
+sym: eval --- Приводит символьное выражение к double, может брать переменные из рабочего простанства. Примеры:
+Без выражений, которые не содержат символов, \textit{eval} делает то же самое что и \textit{double}
+\begin{lstlisting}[mathescape]
+  f = 2*sin(sym(3))
+  $\Rightarrow$ f = (sym) 2$\cdot$sin(3)
+  eval(f)
+  $\Rightarrow$ ans = 0.2822
+  double(f)
+  $\Rightarrow$ ans = 0.2822
+\end{lstlisting}
+
+\begin{lstlisting}[mathescape]
+  syms x y
+  f = x*sin(y)
+  $\Rightarrow$ f = (sym) x$\cdot$sin(y)
+
+  x = 2.1
+  $\Rightarrow$ x = 2.1000
+  y = 2.9
+  $\Rightarrow$ y = 2.9000
+
+  f
+  $\Rightarrow$ f = (sym) x$\cdot$sin(y)
+
+  eval(f)
+  $\Rightarrow$ ans = 0.5024
+\end{lstlisting}
+
+\chapter{Ссылки}
+Откуда была взята информация:
+\begin{itemize}
+  \item{\url{https://intuit.ru/studies/courses/3677/919/info}}
+  \item{\url{https://octave.org/doc/v6.2.0/}}
+  \item{\url{https://octave.sourceforge.io/symbolic/overview.html}}
+\end{itemize}
+\end{document}
